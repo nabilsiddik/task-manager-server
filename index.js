@@ -63,6 +63,22 @@ async function run() {
       res.send(result)
     })
 
+    // update task
+    app.put('/update-task/:taskId', async(req, res) => {
+      const taskId = req.params.taskId
+      const updatedTitle = req.body
+      const query = {_id: new ObjectId(taskId)}
+
+      const updatedDoc = {
+        $set: updatedTitle
+      }
+
+      const result = await taskCollection.updateOne(query, updatedDoc)
+
+
+      res.send(result)
+    })
+
 
   } finally {
     // Ensures that the client will close when you finish/error
