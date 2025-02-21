@@ -80,6 +80,17 @@ async function run() {
     })
 
 
+    
+    // delete task
+    app.delete('/delete-task/:taskId', async(req, res) => {
+      const taskId = req.params.taskId
+      const query = {_id: new ObjectId(taskId)}
+
+      const result = await taskCollection.deleteOne(query)
+      res.send(result)
+    })
+
+
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
