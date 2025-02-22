@@ -10,8 +10,7 @@ const port = process.env.PORT || 5000;
 const corsOptions = {
   origin: [
     "http://localhost:5173",
-    "https://my-project-22db9.firebaseapp.com",
-    "https://my-project-22db9.web.app",
+    "https://learning-management-syst-1b841.web.app"
   ],
   credentials: true,
   optionalSuccessStatus: 200,
@@ -39,6 +38,7 @@ async function run() {
 
     // await client.connect();
     const taskCollection = client.db("task-manager").collection("tasks");
+    const userCollection = client.db("task-manager").collection("users");
 
     app.get("/", (req, res) => {
       res.send("Servicer is running perfectly");
@@ -110,6 +110,25 @@ async function run() {
       const result = await taskCollection.deleteOne(query)
       res.send(result)
     })
+
+
+    // Post users
+    app.post("/users/:email", async (req, res) => {
+        const email = req.params.email;
+        const user = req.body;
+        const query = { email };
+
+        const isExist = await userCollection.findOne(query);
+        if (isExist) {
+          return res.send(isExist);
+        }
+
+        const result = await userCollection.insertOne({
+          ...user,
+          timeStamp: Date.now(),
+        });
+        res.send(result);
+      });
 
 
   } finally {
