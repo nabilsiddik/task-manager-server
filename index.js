@@ -80,6 +80,27 @@ async function run() {
     })
 
 
+    // Update task on drag and drop
+    app.put("/update-dnd-task/:taskId", async (req, res) => {
+      const taskId = req.params.taskId;
+      const { category } = req.body;
+    
+      if (!category) {
+        return res.status(400).json({ message: "Category is required" });
+      }
+    
+      try {
+        const query =  { _id: new ObjectId(taskId) }
+        const updatedDoc = { $set: { category }}
+        const result = await taskCollection.updateOne(query, updatedDoc);
+    
+        res.send(result)
+      } catch (error) {
+        console.error("Error updating task category:", error);
+      }
+    });
+
+
     
     // delete task
     app.delete('/delete-task/:taskId', async(req, res) => {
